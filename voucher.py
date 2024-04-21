@@ -3,11 +3,11 @@ import numpy as np
 import requests
 import json
 
-def generate_gift_code():
-    code_length = 8
+def generate_voucher():
+    voucher_length = 8
     characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
-    gift_code = ''.join(random.choice(characters) for _ in range(code_length))
-    return gift_code
+    voucher = ''.join(random.choice(characters) for _ in range(voucher_length))
+    return voucher
 
 def generate_promo_code(length):
     characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
@@ -18,12 +18,12 @@ def apply_promo_code(website, promo_code):
     # Logika untuk menerapkan promo code ke website
     print(f"Promo code {promo_code} telah diterapkan pada {website}")
 
-def generate_coupons_and_titles(num_coupons):
+def generate_coupons_and_titles():
     list_of_coupons_and_title = [
-        {"coupon": generate_gift_code(), "title": "Diskon untuk item A"},
-        {"coupon": generate_gift_code(), "title": "Gratis ongkir untuk item B"},
-        {"coupon": generate_gift_code(), "title": "Potongan 50% untuk item C"},
-        {"coupon": generate_gift_code(), "title": "Penawaran spesial untuk item D"},
+        {"coupon": generate_voucher(), "title": "Discount on item A"},
+        {"coupon": generate_voucher(), "title": "Free shipping for item B"},
+        {"coupon": generate_voucher(), "title": "50% off on item C"},
+        {"coupon": generate_voucher(), "title": "Special offer for item D"},
     ]
     return list_of_coupons_and_title
 
@@ -34,29 +34,24 @@ def apply_coupons_to_items(list_of_coupons_and_title):
         # Logika untuk menerapkan kupon pada item tertentu
         print(f"Kupon {coupon} ({title}) telah diterapkan pada item ke-{indx+1}")
 
-def save_coupons_to_file(coupons, filename):
-    with open(filename, "w") as f:
-        for coupon in coupons:
-            f.write(coupon + "\n")
-
 def main():
-    # Meminta input dari pengguna untuk website target
-    website = input("Masukkan website target: ")
+    # Membaca konfigurasi website dari host.json atau package.name aplikasi
+    with open("host.json", "r") as f:
+        config = json.load(f)
+        website = config.get("website", "default_website.com")
+
+    # Atau jika ingin membaca dari package.name aplikasi, gantilah dengan cara yang sesuai
+    # website = get_package_name()
 
     # Menghasilkan promo code dan menerapkannya pada website
     promo_code = generate_promo_code(8)
     apply_promo_code(website, promo_code)
 
     # Menghasilkan daftar kupon dan judul
-    num_coupons = 10
-    list_of_coupons_and_title = generate_coupons_and_titles(num_coupons)
+    list_of_coupons_and_title = generate_coupons_and_titles()
 
     # Menerapkan kupon pada item-item
     apply_coupons_to_items(list_of_coupons_and_title)
-
-    # Simpan kupon ke dalam file coupons.txt
-    coupon_codes = [coupon_and_title["coupon"] for coupon_and_title in list_of_coupons_and_title]
-    save_coupons_to_file(coupon_codes, "coupons.txt")
 
 if __name__ == "__main__":
     main()
